@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Browser Fingerprint - Incognito Tracker Demo</title>
+    <style>
+        
+        :root {
+            --bg-color: #2c3e50; 
+            --container-bg: #34495e; 
+            --text-color: #ecf0f1; 
+            --primary-color: #1abc9c; 
+            --secondary-color: #3498db; 
+            --warning-color: #e67e22; 
+            --danger-color: #e74c3c; 
+            --success-color: #2ecc71; 
+            --font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            --monospace-font: 'Courier New', Courier, monospace;
+            --border-radius: 6px;
+            --box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        body {
+            font-family: var(--font-family);
+            line-height: 1.7;
+            padding: 25px;
+            margin: 0;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .main-content {
+            max-width: 850px;
+            width: 100%;
+        }
+
+       
+        .container {
+            background-color: var(--container-bg);
+            padding: 20px 25px;
+            border-radius: var(--border-radius);
+            margin-bottom: 25px;
+            box-shadow: var(--box-shadow);
+            border: 1px solid #4a6274;
+        }
+
+        
+        h1 {
+            color: var(--primary-color);
+            text-align: center;
+            margin-bottom: 10px;
+            font-size: 2.2em;
+        }
+        h2 {
+            color: var(--secondary-color);
+            border-bottom: 2px solid var(--secondary-color);
+            padding-bottom: 8px;
+            margin-top: 0;
+            margin-bottom: 20px;
+            font-size: 1.6em;
+        }
+        h3 {
+            color: var(--primary-color);
+            margin-top: 25px;
+            margin-bottom: 15px;
+            font-size: 1.4em;
+        }
+        h4 {
+            color: var(--text-color);
+            opacity: 0.9;
+            margin-top: 20px;
+            margin-bottom: 10px;
+            font-size: 1.1em;
+        }
+        p {
+            margin-bottom: 15px;
+        }
+        small {
+            opacity: 0.8;
+        }
+
+        pre#stableFingerprintId {
+            background-color: #2c3a47; 
+            padding: 15px;
+            border-radius: var(--border-radius);
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            font-family: var(--monospace-font);
+            font-size: 1.1em;
+            color: var(--primary-color);
+            border: 1px solid #4a6274;
+            text-align: center;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.2);
+        }
+
+        
+        textarea {
+            width: calc(100% - 22px); 
+            min-height: 120px;
+            margin-bottom: 15px;
+            background-color: #2c3a47;
+            color: var(--text-color);
+            border: 1px solid #4a6274;
+            border-radius: var(--border-radius);
+            padding: 10px;
+            font-family: var(--monospace-font);
+            font-size: 0.95em;
+            resize: vertical;
+        }
+        textarea:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 2px rgba(26, 188, 156, 0.5);
+        }
+
+        button {
+            padding: 12px 20px;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            margin-right: 10px;
+            font-size: 1em;
+            font-weight: bold;
+            transition: background-color 0.2s ease, transform 0.1s ease;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.15);
+        }
+        button:hover {
+            background-color: #16a085; 
+            transform: translateY(-1px);
+        }
+        button:active {
+            background-color: #138a72;
+            transform: translateY(0px);
+        }
+
+        
+        .warning-text { 
+            color: var(--warning-color);
+            font-weight: bold;
+            background-color: rgba(230, 126, 34, 0.1);
+            padding: 10px;
+            border-radius: var(--border-radius);
+            border-left: 4px solid var(--warning-color);
+        }
+        .match { color: var(--success-color); font-weight: bold; }
+        .mismatch { color: var(--warning-color); font-weight: bold; }
+        .neutral { color: #bdc3c7; /* Lighter gray for notes */ }
+
+        .score {
+            font-size: 1.3em;
+            font-weight: bold;
+            margin-top: 15px;
+            padding: 10px;
+            border-radius: var(--border-radius);
+            text-align: center;
+        }
+        .score.match { background-color: rgba(46, 204, 113, 0.15); border: 1px solid var(--success-color); }
+        .score.mismatch { background-color: rgba(230, 126, 34, 0.15); border: 1px solid var(--warning-color); }
+
+        
+        .attribute-list {
+            list-style-type: none;
+            padding-left: 0;
+        }
+        .attribute-list li {
+            background-color: #2c3a47; 
+            padding: 12px 15px;
+            border-radius: var(--border-radius);
+            margin-bottom: 10px;
+            border-left: 4px solid #4a6274; 
+            transition: border-left-color 0.3s ease;
+        }
+        .attribute-list li.match { border-left-color: var(--success-color); }
+        .attribute-list li.mismatch { border-left-color: var(--warning-color); }
+        .attribute-list li strong { color: var(--secondary-color); }
+        .attribute-list li small em { color: #bdc3c7; opacity: 0.9;}
+        .attribute-list li small:nth-of-type(3) { 
+            display: block;
+            margin-top: 5px;
+        }
+        .attribute-list li .neutral { font-style: italic; opacity: 0.7; }
+
+
+        #comparisonResult hr {
+            border: 0;
+            height: 1px;
+            background-image: linear-gradient(to right, rgba(0, 0, 0, 0), rgba(236, 240, 241, 0.5), rgba(0, 0, 0, 0));
+            margin: 30px 0;
+        }
+
+       
+        #attributeSources {
+            background-color: #2c3a47;
+            padding: 15px 15px 15px 35px;
+            border-radius: var(--border-radius);
+            border-left: 4px solid var(--secondary-color);
+        }
+        #attributeSources li { margin-bottom: 5px; }
+
+    </style>
+</head>
+<body>
+    <div class="main-content">
+        <h1>Incognito Fingerprint Tracker</h1>
+        <p class="warning-text">
+            This demo reveals how your browser can be uniquely identified even in Incognito/Private mode,
+            without using traditional cookies. Your "Stable Fingerprint ID" below is generated from core browser settings.
+        </p>
+
+        <div class="container">
+            <h2>Your Current Fingerprint</h2>
+            <p>Your Stable Fingerprint ID (from core attributes):</p>
+            <pre id="stableFingerprintId">Generating...</pre>
+            <button id="copyBtn">Copy Full Fingerprint Data</button>
+            <p><small>This copies a JSON blob containing all attributes and your Stable ID. Paste it below or in a new incognito window to test.</small></p>
+        </div>
+
+        <div class="container">
+            <h2>Test Against a Previous Fingerprint</h2>
+            <p>Paste your previously copied fingerprint data here:</p>
+            <textarea id="pastedData" placeholder="Paste your fingerprint data (JSON) here..."></textarea>
+            <button id="compareBtn">Compare Fingerprints</button>
+            <div id="comparisonResult"></div>
+        </div>
+
+        <div class="container">
+            <h2>How it Works (Simplified)</h2>
+            <p>We collect various pieces of information your browser readily provides. For the 'Stable Fingerprint ID', we use a subset of these that are less likely to change between normal and private browsing sessions on the same browser:</p>
+            <ul id="attributeSources">
+                <li>User Agent String</li>
+                <li>Browser Language(s)</li>
+                <li>Screen Resolution & Color Depth</li>
+                <li>Timezone</li>
+                <li>Installed Fonts (list of common fonts checked)</li>
+                <li>WebGL Renderer & Vendor</li>
+                <li>Platform (OS)</li>
+                <li>Hardware Concurrency</li>
+                <li><em>(Other attributes like Canvas, Audio, Plugins, DoNotTrack are also collected and used for the detailed similarity score below, but not for the primary Stable ID because they can be more volatile or differ in Incognito mode.)</em></li>
+            </ul>
+            <p>The Stable ID helps demonstrate re-identification. The full attribute comparison shows the nuances.</p>
+        </div>
+    </div>
+
+    <script src="script.js"></script> 
+</body>
+</html>
