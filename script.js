@@ -116,7 +116,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       if (!gl) {
         return "N/A (No WebGL)";
       }
-      const debugInfo = gl.getExtension("WEBGL_debug_renderer_info");
+      const debugInfo = gl.getExtension("RENDERER");
       const vendor = gl.getParameter(
         debugInfo ? debugInfo.UNMASKED_VENDOR_WEBGL : gl.VENDOR
       );
